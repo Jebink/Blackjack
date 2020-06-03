@@ -5,7 +5,10 @@ var blackjackName = {
     "you": {"scorespan": "#your-blackjack-result", "div": ".your-box", "score": 0 },
     "Dealer": {"scorespan": "#dealer-blackjack-result", "div": ".dealer-box", "score": 0 },
     "cards": ["2", "3", "4", "5", "6", "7", "8", "9", "10", "A", "J", "K", "Q"],
-    "cardsMap": {"2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "A": [1, 11], "J": 10, "K": 10, "Q": 10}
+    "cardsMap": {"2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "A": [1, 11], "J": 10, "K": 10, "Q": 10},
+    "wins": 0,
+    "losses": 0,
+    "draws":0,
 }
 
 
@@ -96,58 +99,68 @@ function showScore(activeplayer){
         document.querySelector(activeplayer["scorespan"]).textContent = activeplayer["score"]
     }
 }
+
 //dealer logic
 function dealerlogic () {
     let card = randomcardpicker();
     showcard(dealer, card);
     updateScore(dealer, card);
     showScore(dealer)
+    if ( dealer["score"] > 15 ){
+        showresult(computewinner())
+    }
 }
+
 //compute winner
 function computewinner() {
     let winner;
     if(you["score"] <= 21){
         //higher score than dealer or the the dealer bust
         if( (you["score"] > dealer["score"]) || (dealer["score"] > 21) ){
-            console.log("You Won")
+            blackjackName["wins"]++
             winner = you
         }
         else if (you["score"] < dealer["score"]) {
-            console.log("dealer score more than you");
+
+            blackjackName["losses"]++
             winner = dealer
         }
         else if (you["score"] === dealer["score"]){
-            console.log("It's a tie");
+            blackjackName["draws"]++
 
         }
     // condetion when user bust dealer doesn't
     }
     else if (you["score"] > 21 && dealer["score"] <= 21){
-        console.log("You Lost");
+        blackjackName["losses"]++
         winner = dealer   
     }
     else if (you["score"] > 21 && dealer["score"] > 21) {
-        console.log("it's a tie");
+        blackjackName["draws"]++
         
     }
-    console.log("winner is " + winner);
+    console.log(blackjackName["wins"]);
+    
     return winner
 }
 
 function showresult(winner) {
     let message, messageColor;
     if(winner === you){
+        document.querySelector("#wins").textContent = blackjackName["wins"]
         message = "You Won";
         messageColor = "green";
         win_sound.play()
 
     }
     else if (winner === dealer){
+        document.querySelector("#losses").textContent = blackjackName["losses"]
         message = "You Lost!";
         messageColor = "red";
         loss_sound.play()
     }
     else{
+        document.querySelector("#draws").textContent = blackjackName["draws"]
         message = "You Drew";
         messageColor = "black"
     }
