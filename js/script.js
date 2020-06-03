@@ -11,9 +11,8 @@ var blackjackName = {
     "draws":0,
     "isStand": false,
     "turnsOver": false,
+    "turns":0,
 }
-
-
 //constants
 const you = blackjackName["you"];
 const dealer = blackjackName["Dealer"];
@@ -43,7 +42,10 @@ function blackjackhit() {
   
 }
 function blackjackstand() {
-    dealerlogic()
+    if (blackjackName["turnsOver"] === false){
+        dealerlogic()
+    }
+    
 }
 function blackjackdeal() {
     removecard()
@@ -117,24 +119,36 @@ function showScore(activeplayer){
     }
 }
 
+function sleep(ms) {
+    return new Promise( resolve => setTimeout(resolve, 500))
+}
 //dealer logic
-function dealerlogic () {
+async function dealerlogic () {
+
     blackjackName["isStand"] = true;
-    let card = randomcardpicker();
-    showcard(dealer, card);
-    updateScore(dealer, card);
-    showScore(dealer)
-    if ( dealer["score"] > 15 ){
-        blackjackName["turnsOver"] = true;
-        showresult(computewinner())
+
+    while(  (dealer["score"] < 16 && blackjackName["isStand"] === true) ){
+        let card = randomcardpicker();
+        showcard(dealer, card);
+        updateScore(dealer, card);
+        showScore(dealer)
+        await sleep()
+        if(dealer["score"] > you["score"]){
+            blackjackName["turnsOver"] = true;
+            showresult(computewinner())
+            return
+        }
     }
-    console.log(blackjackName["turnsOver"], dealer["score"]);
+
+    blackjackName["turnsOver"] = true;
+    showresult(computewinner())
     
 }
 
 //compute winner
 function computewinner() {
     let winner;
+    blackjackName["turn"]++
     if(you["score"] <= 21){
         //higher score than dealer or the the dealer bust
         if( (you["score"] > dealer["score"]) || (dealer["score"] > 21) ){
@@ -160,8 +174,6 @@ function computewinner() {
         blackjackName["draws"]++
         
     }
-    console.log(blackjackName["wins"]);
-    
     return winner
 }
 
@@ -193,3 +205,4 @@ function showresult(winner) {
     
 }
 
+//automating the bot

@@ -34,12 +34,10 @@
 }
 
 .flex-blackjack-row-2 button {
-    border: 1px solid black;
     padding:20px;
 }
 
 .flex-blackjack-row-2 div {
-    border: 1px solid black;
     padding:10px;
 }
 table, th, td {
