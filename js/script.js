@@ -127,7 +127,7 @@ async function dealerlogic () {
 
     blackjackName["isStand"] = true;
 
-    while(  (dealer["score"] < 16 && blackjackName["isStand"] === true) ){
+    while( ((you["score"] - dealer["score"]) < 10 ) || (dealer["score"] < 16 && blackjackName["isStand"] === true) ){
         let card = randomcardpicker();
         showcard(dealer, card);
         updateScore(dealer, card);
