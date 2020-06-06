@@ -35,6 +35,7 @@ function blackjackhit() {
     updateScore(you, card);
     showScore(you)
     if(you["score"] > 21){
+        blackjackName["isStand"] = true; 
         blackjackName["turnsOver"] = true;
         showresult(computewinner())
     }
@@ -43,6 +44,7 @@ function blackjackhit() {
 }
 function blackjackstand() {
     if (blackjackName["turnsOver"] === false){
+        blackjackName["turnsOver"] = true;
         dealerlogic()
     }
     
